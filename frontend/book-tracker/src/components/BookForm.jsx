@@ -13,7 +13,6 @@ function BookForm({ defaultValues = null, onUpdate = null }) {
     formState: { errors },
   } = useForm();
 
-  // Precargar datos si se va a editar
   useEffect(() => {
     if (defaultValues) {
       Object.entries(defaultValues).forEach(([key, value]) => {
@@ -23,16 +22,30 @@ function BookForm({ defaultValues = null, onUpdate = null }) {
   }, [defaultValues, setValue]);
 
   const onSubmit = async (data) => {
-    if (defaultValues) {
-      await updateBook(defaultValues.id, data);
-      Swal.fire("Actualizado", "Libro actualizado con éxito.", "success");
-    } else {
-      await saveBook(data);
-      Swal.fire("Agregado", "Libro agregado correctamente.", "success");
-    }
+    try {
+      if (defaultValues) {
+        await updateBook(defaultValues.id, data);
+        Swal.fire("Actualizado", "Libro actualizado con éxito.", "success");
+      } else {
+        await saveBook(data);
+        Swal.fire("Agregado", "Libro agregado correctamente.", "success");
+      }
 
-    reset();
-    if (onUpdate) onUpdate();
+      reset({
+        libro: "",
+        autor: "",
+        genero: "",
+        año: "",
+        estado: "",
+      });
+
+      
+      if (onUpdate) {
+        setTimeout(() => onUpdate(), 400); 
+      }
+    } catch (error) {
+      Swal.fire("Error", "Hubo un problema al guardar los datos", "error");
+    }
   };
 
   return (

@@ -17,9 +17,20 @@ function BookList({ refresh }) {
   }, [refresh]);
 
   const handleDelete = async (id) => {
-    await deleteBook(id);
-    Swal.fire("Eliminado", "Libro eliminado correctamente", "info");
-    fetchBooks();
+    const confirm = await Swal.fire({
+      title: "¿Estás seguro?",
+      text: "Esta acción eliminará el libro permanentemente.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar",
+    });
+
+    if (confirm.isConfirmed) {
+      await deleteBook(id);
+      Swal.fire("Eliminado", "Libro eliminado correctamente", "success");
+      fetchBooks();
+    }
   };
 
   return (

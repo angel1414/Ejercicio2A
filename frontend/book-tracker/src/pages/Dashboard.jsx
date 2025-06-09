@@ -3,14 +3,16 @@ import BookForm from "../components/BookForm";
 import BookList from "../components/BookList";
 
 function Dashboard() {
-  const [refresh, setRefresh] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0); 
+
+  const handleRefresh = () => {
+    setRefreshKey((prev) => prev + 1); 
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("authorized");
     window.location.href = "/";
   };
-
-  const handleUpdate = () => setRefresh(!refresh);
 
   return (
     <div className="min-h-screen bg-gray-100 px-4 py-6">
@@ -28,10 +30,10 @@ function Dashboard() {
         </div>
 
         <div className="bg-white p-6 rounded-lg shadow mb-8">
-          <BookForm onUpdate={handleUpdate} />
+          <BookForm onUpdate={handleRefresh} />
         </div>
 
-        <BookList refresh={refresh} />
+        <BookList refresh={refreshKey} />
       </div>
     </div>
   );
